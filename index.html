@@ -355,7 +355,7 @@
     .portfolio-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to top, rgba(28,28,26,0.55) 0%, transparent 55%);
+      background: linear-gradient(to top, rgba(28,28,26,0.7) 0%, rgba(28,28,26,0.1) 50%, transparent 100%);
       opacity: 0;
       transition: opacity 0.4s ease;
       display: flex;
@@ -367,12 +367,29 @@
       opacity: 1;
     }
 
-    .portfolio-overlay-text {
+    .portfolio-overlay-content {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .portfolio-overlay-title {
       font-family: 'Cormorant Garamond', serif;
-      font-size: 0.85rem;
+      font-size: 1.05rem;
+      font-weight: 400;
       font-style: italic;
-      letter-spacing: 0.08em;
-      color: rgba(253,250,246,0.9);
+      letter-spacing: 0.04em;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .portfolio-overlay-cta {
+      font-family: 'Jost', sans-serif;
+      font-size: 0.62rem;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(253,250,246,0.65);
     }
 
     /* ─── Lightbox ──────────────────────────────────────────────────── */
@@ -454,12 +471,29 @@
     }
 
     .lightbox-counter {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: rgba(253,250,246,0.45);
+    }
+
+    .lightbox-caption {
       position: fixed;
       bottom: 24px; left: 50%;
       transform: translateX(-50%);
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      color: rgba(253,250,246,0.5);
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .lightbox-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-style: italic;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      color: rgba(253,250,246,0.9);
     }
 
     /* ─── Contact ───────────────────────────────────────────────────── */
@@ -762,7 +796,10 @@
       <img src="" alt="Artwork" id="lb-img" />
     </div>
     <button class="lightbox-next" id="lb-next" aria-label="Next">&#8594;</button>
-    <p class="lightbox-counter" id="lb-counter"></p>
+    <div class="lightbox-caption">
+      <p class="lightbox-title" id="lb-title"></p>
+      <p class="lightbox-counter" id="lb-counter"></p>
+    </div>
   </div>
 
   <!-- ─── Scripts ────────────────────────────────────────────────────── -->
@@ -772,46 +809,60 @@
        site, download the images and place them in an /images/ folder,
        then update the paths below (e.g. "images/painting-01.jpg").
     ─────────────────────────────────────────────────────────────────── */
+    /* ── Edit the "title" for each painting below ────────────────────
+       The title appears on hover over the image and in the lightbox.
+       Change any title to whatever you like — just keep the quotes.
+    ─────────────────────────────────────────────────────────────────── */
     const paintings = [
       {
         src: "images/beaches.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "Beaches"
       },
       {
         src: "images/cathedralcove.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "Cathedral Cove"
       },
       {
         src: "images/lakecomo.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "Lake Como"
       },
       {
         src: "images/lakecomo2.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "Lake Como II"
       },
       {
         src: "images/italy.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "Italy"
       },
       {
         src: "images/lakecomo3.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "Lake Como III"
       },
       {
         src: "images/lakewhakatipu.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "Lake Whakatipu"
       },
       {
         src: "images/milfordsound.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "Milford Sound"
       },
       {
         src: "images/piha.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "Piha"
       },
       {
         src: "images/remarkables.jpg",
-        alt: "Landscape painting by Kevin J Smithson"
+        alt: "Landscape painting by Kevin J Smithson",
+        title: "The Remarkables"
       }
     ];
 
@@ -823,7 +874,10 @@
       item.innerHTML = `
         <img src="${p.src}" alt="${p.alt}" loading="lazy" />
         <div class="portfolio-overlay">
-          <span class="portfolio-overlay-text">View artwork</span>
+          <div class="portfolio-overlay-content">
+            <span class="portfolio-overlay-title">${p.title}</span>
+            <span class="portfolio-overlay-cta">View artwork</span>
+          </div>
         </div>
       `;
       item.addEventListener('click', () => openLightbox(i));
@@ -840,6 +894,7 @@
       current = index;
       lbImg.src = paintings[index].src;
       lbImg.alt = paintings[index].alt;
+      document.getElementById('lb-title').textContent = paintings[index].title;
       lbCounter.textContent = `${index + 1} / ${paintings.length}`;
       lb.classList.add('open');
       document.body.style.overflow = 'hidden';
